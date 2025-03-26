@@ -3,8 +3,8 @@ import { Button } from "./button"
 
 function Navbar() {
   return (
-    <nav className="fixed top-0 w-[90%] z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 rounded-full">
-      <div className="container flex h-16 items-center px-4">
+    <nav className="fixed top-0 left-1/2 -translate-x-1/2 w-[90%] z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 rounded-full">
+      <div className="container flex h-16 items-center">
         <div className="flex gap-2 items-center">
           <img src="/omira.png" alt="Omira" width={32} height={32} />
           <span className="text-lg font-semibold tracking-tight">Omira</span>
@@ -26,11 +26,11 @@ function Navbar() {
         </div>
 
         {/* Auth Buttons */}
-        <div className="flex items-center gap-4 text-sm transition-colors">
-          <Button variant="outline" asChild className="text-gray">
+        <div className="flex items-center gap-2 sm:gap-4 text-sm transition-colors">
+          <Button variant="outline" asChild className="text-gray px-2 sm:px-4">
             <a href="/signin">Signin</a>
           </Button>
-          <Button asChild className="text-gray">
+          <Button asChild className="text-gray px-2 sm:px-4">
             <a href="/signup">Signup</a>
           </Button>
         </div>

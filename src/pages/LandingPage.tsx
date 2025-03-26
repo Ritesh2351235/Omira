@@ -9,7 +9,7 @@ import { ArrowRight } from 'lucide-react';
 export default function LandingPage() {
   return (
     <div className="relative min-h-screen bg-background">
-      <div className='pt-10 mx-10'>
+      <div className="w-full pt-10">
         <Navbar />
       </div>
       <HeroSection
