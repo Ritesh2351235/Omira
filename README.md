@@ -15,7 +15,7 @@ This repository contains the client application code. For the complete applicati
 [![Made with React](https://img.shields.io/badge/Made%20with-React-blue)](https://reactjs.org/)
 [![Powered by OpenAI](https://img.shields.io/badge/Powered%20by-OpenAI-green)](https://openai.com/)
 
-[Features](#features) • [Quick Start](#quick-start) • [Installation](#installation) • [Documentation](#documentation) • [Contributing](#contributing)
+[Features](#features) • [Quick Start](#quick-start) • [Installation](#installation) 
 
 </div>
 
@@ -220,16 +220,7 @@ server {
 }
 ```
 
-## Documentation
-
-- [Getting Started Guide](docs/getting-started.md)
-- [API Documentation](docs/api.md)
-- [MCP Server Setup](docs/mcp-setup.md)
-- [Contributing Guidelines](CONTRIBUTING.md)
-
 ## Contributing
-
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
