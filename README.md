@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Omira Logo](/public/omira.png)
+<img width="1424" alt="Image" src="https://github.com/user-attachments/assets/b3f082da-98ae-404d-9e6d-4087188ce3e7" />
 
 **Your AI-Powered Personal Mentor for Health and Communication**
 
