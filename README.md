@@ -1,4 +1,4 @@
-# Omira
+# Omira - Your AI Mentor
 
 <div align="center">
 
