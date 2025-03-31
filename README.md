@@ -7,8 +7,8 @@
 **Your AI-Powered Personal Mentor for Health and Communication**
 
 This repository contains the client application code. For the complete application, you'll also need:
-- [Omira Server](https://github.com/Ritesh2351235/Omira-server) - Main server application with Firebase/Firestore integration
-- [Omira Notification](https://github.com/Ritesh2351235/Omira-notification) - Real-time analysis and notification service
+ - [Omira Server](https://github.com/Ritesh2351235/Omira-server) - Main server application with Firebase/Firestore integration
+ - [Omira Notification](https://github.com/Ritesh2351235/Omira-notification) - Real-time analysis and notification service
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
@@ -93,8 +93,8 @@ Omira is an innovative AI-powered personal mentor that helps you unlock your ful
 1. **Clone the Repositories**
 ```bash
 # Clone client repository
-git clone https://github.com/yourusername/omira.git
-cd omira
+git clone https://github.com/Ritesh2351235/Omira.git
+cd Omira
 
 # Clone server repository
 git clone https://github.com/Ritesh2351235/Omira-server.git
