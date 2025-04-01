@@ -4,9 +4,10 @@ import { Activity, Clock, ChevronRight } from 'lucide-react';
 import { useManualUid } from '../hooks/use-manual-uid';
 import ReflectionTimeline from '../components/ReflectionTimeline';
 import { format } from 'date-fns';
-import { getMemories, Memory } from '../utils/api';
+import { getMemories, Memory, getNutritionMemories } from '../utils/api';
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { isSameDay } from 'date-fns';
 
 interface Reflection {
   id: string;
@@ -18,6 +19,12 @@ interface Reflection {
   real_talk: string;
 }
 
+interface NutritionSummary {
+  totalCalories: number;
+  totalProtein: number;
+  mealCount: number;
+}
+
 const Dashboard: React.FC = () => {
   const { currentUser } = useAuth();
   const { manualUid, loading: uidLoading, error: uidError } = useManualUid();
@@ -25,10 +32,18 @@ const Dashboard: React.FC = () => {
   const [memories, setMemories] = useState<Memory[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const [nutritionSummary, setNutritionSummary] = useState<NutritionSummary>({
+    totalCalories: 0,
+    totalProtein: 0,
+    mealCount: 0
+  });
 
   useEffect(() => {
     if (!uidLoading && manualUid) {
       fetchData();
+    }
+    if (manualUid) {
+      fetchNutritionData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [manualUid, uidLoading]);
@@ -71,6 +86,38 @@ const Dashboard: React.FC = () => {
       console.error('Error fetching dashboard data:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchNutritionData = async () => {
+    if (!manualUid) return;
+
+    try {
+      const nutritionMemories = await getNutritionMemories(manualUid);
+
+      // Get today's memories
+      const today = new Date();
+      const todaysMemories = nutritionMemories.filter(memory => {
+        const memoryDate = new Date(memory.created_at);
+        return isSameDay(memoryDate, today);
+      });
+
+      // Calculate summary
+      const summary = todaysMemories.reduce((acc, memory) => {
+        const nutritionData = memory.metadata.find(m => m.analysis_type === 'nutrition')?.nutrition_data;
+        if (nutritionData) {
+          acc.totalCalories += nutritionData.total_calories;
+          nutritionData.foods.forEach(food => {
+            acc.totalProtein += food.protein_g;
+          });
+          acc.mealCount++;
+        }
+        return acc;
+      }, { totalCalories: 0, totalProtein: 0, mealCount: 0 });
+
+      setNutritionSummary(summary);
+    } catch (error) {
+      console.error('Error fetching nutrition data:', error);
     }
   };
 
@@ -238,18 +285,18 @@ const Dashboard: React.FC = () => {
             <div>
               <p className="text-sm font-medium text-zinc-500">Total Calories</p>
               <div className="mt-2 flex items-baseline">
-                <p className="text-3xl font-bold text-zinc-900">2,345</p>
+                <p className="text-3xl font-bold text-zinc-900">{nutritionSummary.totalCalories.toLocaleString()}</p>
                 <p className="ml-2 text-sm text-zinc-500">calories</p>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="text-sm font-medium text-zinc-500">Protein</p>
-                <p className="mt-1 text-xl font-semibold text-zinc-900">120g</p>
+                <p className="mt-1 text-xl font-semibold text-zinc-900">{nutritionSummary.totalProtein.toFixed(1)}g</p>
               </div>
               <div>
                 <p className="text-sm font-medium text-zinc-500">Meals</p>
-                <p className="mt-1 text-xl font-semibold text-zinc-900">3</p>
+                <p className="mt-1 text-xl font-semibold text-zinc-900">{nutritionSummary.mealCount}</p>
               </div>
             </div>
             <div className="pt-4 mt-4 border-t border-zinc-100">
