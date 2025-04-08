@@ -3,7 +3,7 @@ import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 // Import Lucide icons
-import { Loader2, AlertCircle, Info, CalendarClock, Smartphone } from 'lucide-react';
+import { Loader2, AlertCircle, Info } from 'lucide-react';
 
 // Import Shadcn components
 import { Button } from './ui/button';
@@ -55,24 +55,21 @@ const SignUp: React.FC = () => {
       return;
     }
 
+    if (!uidFromUrl) {
+      setError('Please sign up through the Omi mobile app first');
+      return;
+    }
+
     try {
       setError('');
       setLoading(true);
       console.log('🔐 Attempting to sign up with:', {
         email,
         name,
-        manualUid: uidFromUrl || 'NONE'
+        manualUid: uidFromUrl
       });
 
-      // Pass the UID from URL as the manual UID parameter
-      if (uidFromUrl) {
-        console.log(`📝 Using manual UID from URL: ${uidFromUrl}`);
-        await signUp(email, password, uidFromUrl);
-      } else {
-        console.log('📝 No manual UID available, creating standard account');
-        await signUp(email, password);
-      }
-
+      await signUp(email, password, uidFromUrl);
       console.log('✅ Sign up successful, redirecting to dashboard');
       navigate('/dashboard');
     } catch (err: any) {
@@ -110,24 +107,29 @@ const SignUp: React.FC = () => {
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">Create Your Omira Account</CardTitle>
           <CardDescription className="text-center">
-            Enter your details to sign up for an account
+            Sign up with your Omi app ID
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="border border-neutral-200 bg-neutral-50 text-neutral-800 p-4 rounded-lg mb-6">
-            <div className="flex items-center gap-2">
-              <Smartphone className="h-4 w-4" />
-              <h4 className="text-neutral-800 font-medium text-sm">Recommended: Sign Up via Omi App</h4>
+          {!uidFromUrl ? (
+            <div className="border border-destructive bg-destructive/10 text-destructive p-4 rounded-lg mb-6">
+              <div className="flex items-center gap-2 mb-2">
+                <AlertCircle className="h-5 w-5" />
+                <h4 className="font-medium">Signup Required Through Omi App</h4>
+              </div>
+              <p className="text-sm leading-relaxed">
+                To ensure proper synchronization of your data and memories, you must first create an account through the Omi mobile app. Please download the app and complete the signup process there.
+              </p>
             </div>
-            <p className="text-sm text-neutral-600 mt-1 leading-relaxed">
-              For the best experience and to ensure your memories sync correctly, we recommend signing up through the Omi mobile app first.
-            </p>
-          </div>
-
-          {uidFromUrl && (
-            <div className="bg-primary/15 text-primary text-sm p-3 rounded-md flex items-center gap-2 mb-4">
-              <Info className="h-4 w-4" />
-              <span>Your account will be linked with Omi ID: <strong>{uidFromUrl}</strong></span>
+          ) : (
+            <div className="border border-neutral-200 bg-neutral-50 text-neutral-800 p-4 rounded-lg mb-6">
+              <div className="flex items-center gap-2">
+                <Info className="h-4 w-4" />
+                <h4 className="text-neutral-800 font-medium text-sm">Connected to Omi App</h4>
+              </div>
+              <p className="text-sm text-neutral-600 mt-1 leading-relaxed">
+                Your account will be linked with Omi ID: <strong>{uidFromUrl}</strong>
+              </p>
             </div>
           )}
 
@@ -149,6 +151,7 @@ const SignUp: React.FC = () => {
                   autoComplete="name"
                   value={name}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+                  disabled={!uidFromUrl}
                 />
               </div>
 
@@ -162,6 +165,7 @@ const SignUp: React.FC = () => {
                   autoComplete="email"
                   value={email}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                  disabled={!uidFromUrl}
                 />
               </div>
 
@@ -174,6 +178,7 @@ const SignUp: React.FC = () => {
                   autoComplete="new-password"
                   value={password}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                  disabled={!uidFromUrl}
                 />
               </div>
 
@@ -185,15 +190,22 @@ const SignUp: React.FC = () => {
                   required
                   value={confirmPassword}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value)}
+                  disabled={!uidFromUrl}
                 />
               </div>
 
-              <Button className="w-full" type="submit" disabled={loading}>
+              <Button
+                className="w-full"
+                type="submit"
+                disabled={loading || !uidFromUrl}
+              >
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Please wait
                   </>
+                ) : !uidFromUrl ? (
+                  'Please use Omi App to Sign Up'
                 ) : (
                   'Sign Up'
                 )}
